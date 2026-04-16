@@ -7,4 +7,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Sprint 1: modelos User/Session aqui
+model Tenant {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  
+  users     User[]
+  profiles  Profile[]
+}
+
+enum Role {
+  PRIMARY
+  SECONDARY
+}
+
+model User {
+  id           String    @id @default(uuid())
+  tenantId     String
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         Role      @default(PRIMARY)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  tenant       Tenant    @relation(fields: [tenantId], references: [id])
+  profiles     Profile[]
+
+  @@index([email])
+  @@index([tenantId])
+}
+
+enum ProfileType {
+  PRIMARY
+  SECONDARY
+}
+
+model Profile {
+  id        String      @id @default(uuid())
+  tenantId  String
+  userId    String
+  name      String
+  type      ProfileType
+  isDeleted Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  tenant    Tenant      @relation(fields: [tenantId], references: [id])
+  user      User        @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+}
