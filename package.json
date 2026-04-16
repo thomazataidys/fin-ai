@@ -1,0 +1,17 @@
+{
+  "name": "fin-ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "build": "pnpm -r build",
+    "test": "pnpm --filter backend test",
+    "db:generate": "pnpm --filter backend prisma:generate",
+    "db:migrate": "pnpm --filter backend prisma:migrate",
+    "db:studio": "pnpm --filter backend prisma:studio"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
